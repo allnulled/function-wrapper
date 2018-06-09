@@ -1,6 +1,6 @@
 const { expect } = require("chai");
-const FunctionWrapper = require(__dirname + "/../src/function-wrapper.js")
-	.FunctionWrapper;
+const { FunctionWrapper, ConsoleManager } = require(__dirname +
+	"/../src/function-wrapper.js");
 
 describe("FunctionWrapper class", function() {
 	var LogMessages = [];
@@ -200,4 +200,32 @@ describe("FunctionWrapper class", function() {
   funcScope,
   override
 	*/
+});
+
+describe("ConsoleManager master object", function() {
+	it("can save logging, recover logging, know if it is saving the logging, retrieve the logged messages, clear messages, and save logging overriding default behaviour.", function(done) {
+		console.log("Message not saved 1");
+		expect(ConsoleManager.isSavingLog()).to.equal(false);
+		ConsoleManager.saveLog();
+		console.log("Message saved 1");
+		expect(ConsoleManager.isSavingLog()).to.equal(true);
+		console.log("Message saved 2");
+		console.log("Message saved 3");
+		ConsoleManager.originalLog("Message not saved 2");
+		ConsoleManager.recoverLog();
+		console.log("Message not saved 4");
+		expect(ConsoleManager.messages.length).to.equal(3);
+		ConsoleManager.clearMessages();
+		expect(ConsoleManager.messages.length).to.equal(0);
+		ConsoleManager.saveLog(true);
+		console.log("This message should never be seen by console");
+		ConsoleManager.recoverLog();
+		expect(ConsoleManager.messages.length).to.equal(1);
+		expect(ConsoleManager.messages[0]).to.equal(
+			"This message should never be seen by console"
+		);
+		ConsoleManager.clearMessages();
+		expect(ConsoleManager.messages.length).to.equal(0);
+		done();
+	});
 });

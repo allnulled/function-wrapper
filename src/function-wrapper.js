@@ -196,7 +196,166 @@
       };
     }
     FunctionWrapper.noop = function() {};
-    return { FunctionWrapper };
+    /**
+     *
+     * ----
+     *
+     * ### `require("function-wrapper").ConsoleManager`
+     *
+     * @type `{Object}`
+     *
+     * @description Utility to save the console messages in a fast and reliable way.
+     * As it was the main purpose of this library, the utility is included directly
+     * with it.
+     *
+     *
+     *
+     */
+    const ConsoleManager = {
+      /**
+       *
+       * ----
+       *
+       * ### `ConsoleManager.messages`
+       *
+       * @type `{Array}`
+       *
+       * @description Array that saves the logged messages (when the messages
+       * are being logged.
+       *
+       * @usage The usage of this object is very simple.
+       *
+       * ```js
+       * console.log("Message not saved 1");
+       * console.log(ConsoleManager.isSavingLog()); // >> false
+       * ConsoleManager.saveLog();
+       * console.log("Message saved 1");
+       * console.log(ConsoleManager.isSavingLog()); // >> true
+       * console.log("Message saved 3");
+       * console.log("Message saved 4");
+       * ConsoleManager.originalLog("Message not saved 3");
+       * ConsoleManager.recoverLog();
+       * console.log("Message not saved 4");
+       * console.log(ConsoleManager.messages.length === 4); // >> true
+       * ConsoleManager.clearMessages();
+       * console.log(ConsoleManager.messages.length === 0); // >> true
+       * ```
+       *
+       */
+      messages: [],
+      /**
+       *
+       * ----
+       *
+       * ### `ConsoleManager.clearMessages()`
+       *
+       * @type `{Function}`
+       *
+       * @description Clears the stack of messages already saved.
+       *
+       * @returns `{void}`
+       *
+       */
+      clearMessages: function() {
+        this.messages = [];
+      },
+      /**
+       *
+       * ----
+       *
+       * ### `ConsoleManager.originalLog(Any...)`
+       *
+       * @type `{Function}`
+       *
+       * @description The classical `console.log` function is saved here, so you can substitute
+       * the `console.log(...)` usage by `ConsoleManager.originalLog(...)` whenever you need to
+       * log something by console, independently of the current `console.log(...)` behaviour.
+       *
+       * @returns `{void}`
+       *
+       */
+      originalLog: (function(log) {
+        return log;
+      })(
+        typeof console !== "undefined" && typeof console.log === "function"
+          ? console.log
+          : function() {}
+      ),
+      /**
+       *
+       * ----
+       *
+       * ### `ConsoleManager.saveLog(Boolean:overrideOriginal)`
+       *
+       * @type `{Function}`
+       *
+       * @parameter `{Boolean} overrideOriginal`. If `true`, it will override the default behaviour of
+       * `console.log`, and it will hide the logs from console when logs are being saved. Otherwise,
+       * the default behaviour is kept, and the messages are logged as always, but the messages will
+       * be also saved int `ConsoleManager.messages`.
+       *
+       * @description Starts saving all the messages passed to `console.log` into `ConsoleManager.messages`.
+       *
+       * @returns `{void}`
+       *
+       *
+       */
+      saveLog: function(shouldOverrideDefault = false) {
+        const thisInstance = this;
+        const funcs = new FunctionWrapper({
+          override: shouldOverrideDefault,
+          func: thisInstance.originalLog,
+          before: function() {
+            thisInstance.messages = thisInstance.messages.concat(
+              Array.prototype.slice.call(arguments)
+            );
+          }
+        });
+        console.log = funcs.newFunc;
+      },
+      /**
+       * ----
+       *
+       * ### `ConsoleManager.recoverLog()`
+       *
+       * @type `{Function}`
+       *
+       * @description Stops saving all the messages passed to `console.log` into `ConsoleManager.messages`,
+       * and returns the original behaviour to `console.log` method.
+       *
+       * @returns `{void}`
+       *
+       *
+       *
+       *
+       *
+       *
+       */
+      recoverLog: function() {
+        console.log = this.originalLog;
+      },
+      /**
+       *
+       * ### `ConsoleManager.isSavingLog()`
+       *
+       * @type `{Function}`
+       *
+       * @description Returns `true` if the `console.log` method is the same as the begining, when the
+       * module was loaded.
+       *
+       * @returns `{Boolean}`
+       *
+       *
+       *
+       *
+       *
+       *
+       */
+      isSavingLog: function() {
+        return console.log !== this.originalLog;
+      }
+    };
+    return { FunctionWrapper, ConsoleManager };
     //
     //
     //
