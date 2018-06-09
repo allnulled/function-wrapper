@@ -1,7 +1,7 @@
 /**
  * # function-wrapper
  *
- * ![](https://img.shields.io/badge/function--wrapper-v1.0.0-green.svg) ![](https://img.shields.io/badge/tests-100%25-green.svg) ![](https://img.shields.io/badge/coverage-100%25-green.svg) ![](https://img.shields.io/badge/stable-95%25-green.svg)
+ * ![](https://img.shields.io/badge/function--wrapper-v1.1.0-green.svg) ![](https://img.shields.io/badge/tests-100%25-green.svg) ![](https://img.shields.io/badge/coverage-100%25-green.svg) ![](https://img.shields.io/badge/stable-95%25-green.svg)
  *
  *
  *
