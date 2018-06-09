@@ -109,7 +109,7 @@ Set the `override` to **`true`** if you want to omit the wrapped function call i
 
 ----
 
-### B. Usage of the `ConsoleManager` class.
+### B. Usage of the `ConsoleManager` object.
 
 #### 1. Get the module.
 

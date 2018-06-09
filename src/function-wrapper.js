@@ -108,7 +108,7 @@
  *
  * ----
  *
- * ### B. Usage of the `ConsoleManager` class.
+ * ### B. Usage of the `ConsoleManager` object.
  *
  * #### 1. Get the module.
  *
