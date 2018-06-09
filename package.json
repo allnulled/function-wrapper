@@ -1,7 +1,8 @@
 {
   "name": "function-wrapper",
   "version": "1.0.0",
-  "description": "Aspect Oriented Programming minimalistic module for JavaScript.",
+  "description":
+    "Aspect Oriented Programming minimalistic module for JavaScript.",
   "main": "function-wrapper.js",
   "directories": {
     "test": "test"
