@@ -115,17 +115,17 @@
      *
      * · **`func`**: `{Function}`. Function to be wrapped.
      *
-     * · **`funcScope`**: `{Any}`. The scope asigned to the function to be wrapped.
+     * · **`funcScope`**: `{Any}`. The scope assigned to the function to be wrapped.
      *
      * · **`before`**: `{Function}`. Function to be called before the wrapped function.
      *
-     * · **`beforeScope`**: `{Any}`. The scope asigned to the function to be wrapped.
+     * · **`beforeScope`**: `{Any}`. The scope assigned to the function to be called before the original function.
      *
-     * · **`after`**: `{Function}`. Function to be called before the wrapped function.
+     * · **`after`**: `{Function}`. Function to be called after the wrapped function.
      *
-     * · **`afterScope`**: `{Any}`. The scope asigned to the function to be wrapped.
+     * · **`afterScope`**: `{Any}`. The scope assigned to the function to be called after the original function.
      *
-     * · **`scope`**: `{Any}`. The scope asigned to the functions, if their specific parameter is not specified.
+     * · **`scope`**: `{Any}`. The scope assigned to the functions, if their specific parameter is not specified.
      *
      * · **`override`**: `{Boolean}`. Flag to determine if the `newFunc` resultant function should omit (override)
      * the original function call (**`true`**), or not (**`false`**). By default: **`false`** (so, the original
