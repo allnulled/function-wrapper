@@ -13,7 +13,19 @@ a function that can surround a function with 2 functions: one
 before it, and one after it. This way, the developer can wrap a
 function with functions, easily.
 
+As the main goal of this module was to wrap the `console.log` function
+in order to register the messages passed to it, this module also comes
+bundled with a simple utility to register the logs made by `console.log`
+in a comfortable way.
 
+To start saving the messages (into `ConsoleManager.messages`), you can
+simply do `ConsoleManager.saveLog()`. To come back to the default behaviour
+you can simply do `ConsoleManager.recoverLog()`, and `console.log` will
+stop registering the messages that it receives. There are some more options
+too, like to stop logging by console the messages while saving them, to clear
+the messages, to log messages independently of the current `console.log`
+behaviour, or to know if the behaviour of `console.log` was the same as it
+was at the begining or if it has been altered.
 
 ## 1. Installation
 
@@ -21,12 +33,26 @@ function with functions, easily.
 
 ## 2. Usage
 
+This module is divided in 2 onthologies:
+
+**A:** `FunctionWrapper` class.
+
+**B:** `ConsoleManager` object.
+
+Both are provided as Node.js module or browser global variables.
+
+
+### A. Usage of the `FunctionWrapper` class.
+
 #### 1. Get the module.
 
 #### 1.a) Get the module in browser environments:
 
 ```js
 <script src="node_modules/function-wrapper/src/function-wrapper.js"></script>
+<script>
+const FunctionWrapper = FunctionWrapperAPI.FunctionWrapper;
+</script>
 ```
 
 #### 1.b) Get the module in Node.js environments:
@@ -54,6 +80,105 @@ const funcs = new FunctionWrapper({
  override: false
 });
 ```
+#### 3. Change the function by the `~.newFunc` value returned:
+
+```js
+console.log = funcs.newFunc;
+```
+
+#### 4. Use the altered function normally:
+
+```js
+console.log("This is a hooked message");
+   // [BEFORE] {{new Date}} This is a hooked message
+   // This is a hooked message
+   // [BEFORE] {{new Date}} This is a hooked message
+```
+
+#### 5. Change the function to its original value saved at the returned `~.oldFunc`:
+
+```js
+console.log = funcs.oldFunc;
+console.log("This is a normal message again");
+   // This is a normal message again
+```
+
+Set the `scope` parameter if you want a default scope for the 3 functions (before, wrapped, and after).
+
+Set the `override` to **`true`** if you want to omit the wrapped function call in the `newFunc` resultant function.
+
+----
+
+### B. Usage of the `ConsoleManager` class.
+
+#### 1. Get the module.
+
+#### 1.a) Get the module in browser environments:
+
+```js
+<script src="node_modules/function-wrapper/src/function-wrapper.js"></script>
+<script>
+const ConsoleManager = FunctionWrapperAPI.ConsoleManager;
+</script>
+```
+
+#### 1.b) Get the module in Node.js environments:
+
+```js
+const ConsoleManager = require("function-wrapper").ConsoleManager;
+```
+
+#### 2. Start saving logged messages.
+
+The following demonstration uses the [Chai](https://github.com/chaijs/chai) syntax, as the tests are done
+with mocha and chai.
+
+```js
+console.log("Message not saved 1");
+// expect(ConsoleManager.isSavingLog()).to.equal(false);
+ConsoleManager.saveLog();
+console.log("Message saved 1");
+// expect(ConsoleManager.isSavingLog()).to.equal(true);
+console.log("Message saved 2");
+console.log("Message saved 3");
+ConsoleManager.originalLog("Message not saved 2");
+ConsoleManager.recoverLog();
+console.log("Message not saved 4");
+// expect(ConsoleManager.messages.length).to.equal(3);
+ConsoleManager.clearMessages();
+// expect(ConsoleManager.messages.length).to.equal(0);
+ConsoleManager.saveLog(true);
+console.log("This message should never be seen by console");
+ConsoleManager.recoverLog();
+// expect(ConsoleManager.messages.length).to.equal(1);
+// expect(ConsoleManager.messages[0]).to.equal("This message should never be seen by console");
+ConsoleManager.clearMessages();
+// expect(ConsoleManager.messages.length).to.equal(0);
+```
+
+This is a demonstration of the whole `ConsoleManager` API.
+
+But the core idea is simple.
+
+Call `ConsoleManager.saveLog()` to start registering the `console.log(...)` messages into `ConsoleManager.messages` array.
+
+Pass a `true` to `ConsoleManager.saveLog(true)` if you want to hide by console the messages logged while the log is saved.
+
+Call `ConsoleManager.recoverLog()` to stop saving the logged messages by `console.log`.
+
+Call `ConsoleManager.isSavingLog()` to know if the `console.log` is having the default behaviour.
+
+Call `ConsoleManager.originalLog(...)` to use the original `console.log(...)`, independently of its current behaviour.
+
+Use `ConsoleManager.messages` to see the currently saved messages.
+
+Call `ConsoleManager.clearMessages()` to reset the saved messages.
+
+And that is all.
+
+
+
+
 #### 3. Change the function by the `~.newFunc` value returned:
 
 ```js
